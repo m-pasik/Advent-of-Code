@@ -36,7 +36,7 @@ int main(int argc, char **argv)
         die("Not enough arguments provided.");
 
     int success = sscanf(argv[1], "%ld", &year);
-    success &= sscanf(argv[2], "%ld", &day);
+    success *= sscanf(argv[2], "%ld", &day);
     success &= sscanf(argv[3], "%zu", &nruns);
 
     if (!success)
