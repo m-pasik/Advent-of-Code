@@ -6,5 +6,6 @@ Makefile
 cmake_install.cmake
 compile_commands.json
 runner
+run
 libsolution.so
 libsolution.so.*
