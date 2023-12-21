@@ -91,8 +91,20 @@ int main(int argc, char **argv)
      */
     struct stat source_stat, library_stat;
 
-    if (source_stat.st_mtime > library_stat.st_mtime ||
-        stat(library_path, &library_stat) == -1) {
+    if (!PATH_EXISTS(source_path, S_IFREG))
+        die("Source file not found.");
+
+    if (stat(source_path, &source_stat) == -1)
+        die("Error getting information about source file.");
+
+    bool library_exists = PATH_EXISTS(library_path, S_IFREG);
+
+    if (library_exists) {
+        if (stat(library_path, &library_stat) == -1)
+            die("Error getting information about library file.");
+    }
+
+    if (!library_exists || source_stat.st_mtime > library_stat.st_mtime) {
         printf("Recompiling solution...\n");
         char command[N + 73];
         snprintf(
@@ -106,6 +118,9 @@ int main(int argc, char **argv)
     /*
      * Read input file.
      */
+
+    if (!PATH_EXISTS(input_path, S_IFREG))
+        die("Input file not found.");
 
     FILE *input_file = fopen(input_path, "r");
     if (input_file == NULL)
