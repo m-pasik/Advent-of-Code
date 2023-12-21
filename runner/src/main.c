@@ -52,6 +52,9 @@ int main(int argc, char **argv)
     if (day < 1 || day > 25)
         die("Day must be in in in range [1, 25].");
 
+    if (nruns < 1)
+        die("Number of runs must be greater than 0.");
+
     /*
      * Generate file paths.
      */
