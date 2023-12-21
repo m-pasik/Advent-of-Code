@@ -91,22 +91,14 @@ int main(int argc, char **argv)
      */
     struct stat source_stat, library_stat;
 
-    if (stat(source_path, &source_stat) == -1) {
-        perror("Error getting information about source file.");
-        return 1;
-    }
-
-    if (stat(library_path, &library_stat) == -1) {
-        perror("Error getting information about library file.");
-        return 1;
-    }
-
-    if (source_stat.st_mtime > library_stat.st_mtime) {
+    if (source_stat.st_mtime > library_stat.st_mtime ||
+        stat(library_path, &library_stat) == -1) {
         printf("Recompiling solution...\n");
         char command[N + 73];
-        snprintf(command, N + 73,
-            "cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TARGET=Solution -DBUILD_PATH=%s/ .",
-            solution_dir);
+        snprintf(
+                command, N + 73,
+                "cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TARGET=Solution -DBUILD_PATH=%s/ .",
+                solution_dir);
         system(command);
         system("cmake --build .");
     }
