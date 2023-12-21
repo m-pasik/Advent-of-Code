@@ -26,15 +26,18 @@ int64_t solution_p1(const char *data, size_t length)
 
 int64_t solution_p2(const char *data, size_t length)
 {
+#define INDEX(S) (((S)[0] ^ (S)[1]) % 128)
+#define ADD_ENTRY(M, S, V)  \
+    (M)[INDEX(S)] = (Entry) \
+    {                       \
+        (S), strlen(S), (V) \
+    }
+
     typedef struct {
         char str[6];
         size_t len;
         int8_t val;
     } Entry;
-
-#define INDEX(S) (((S)[0] ^ (S)[1]) % 128)
-#define ADD_ENTRY(M, S, V) (M)[INDEX(S)] = (Entry){ (S), strlen(S), (V) }
-#define GET_ENTRY(M, S) (M)[INDEX(S)]
 
     Entry map[128] = { 0 };
 
@@ -57,7 +60,7 @@ int64_t solution_p2(const char *data, size_t length)
                 goto found;
             }
 
-            Entry *entry = &GET_ENTRY(map, &data[start]);
+            Entry *entry = &map[INDEX(&data[start])];
             if (!entry->str[0])
                 continue;
             if (start + entry->len >= length)
@@ -75,7 +78,7 @@ found:
         tmp = data[end] - '0';
 
         for (end++; data[end] != '\n' && end < length - 3; end++) {
-            Entry *entry = &GET_ENTRY(map, &data[end]);
+            Entry *entry = &map[INDEX(&data[end])];
             if (!entry->str[0])
                 continue;
             if (end + entry->len >= length)
